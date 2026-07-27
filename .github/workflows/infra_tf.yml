@@ -1,0 +1,92 @@
+name: Terraform Infra Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TF_VERSION: 1.13.1
+
+jobs:
+
+  validate:
+    name: Validate & Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      - name: TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - run: |
+          tflint --init
+          tflint
+
+      - name: TFSEC
+        uses: aquasecurity/tfsec-action@v1.0.3
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
+  plan:
+    needs: validate
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Upload Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: tfplan
+
+  apply:
+    if: github.ref == 'refs/heads/main'
+    needs: plan
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
