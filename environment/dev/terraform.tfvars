@@ -4,7 +4,11 @@ rgs = {
     location = "westus"
   }
   rg2 = {
-    name     = "sg"
+    name     = "sg1"
+    location = "westus"
+  }
+    rg3 = {
+    name     = "sg2"
     location = "westus"
   }
 }
