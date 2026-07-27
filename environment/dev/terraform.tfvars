@@ -3,6 +3,10 @@ rgs = {
     name     = "sg"
     location = "westus"
   }
+  rg2 = {
+    name     = "sg"
+    location = "westus"
+  }
 }
 subnets = {
   subnet1 = {
