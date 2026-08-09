@@ -30,7 +30,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   name                            = each.value.virtual_machine_name
   resource_group_name             = each.value.resource_group_name
   location                        = each.value.location
-  size                            = "Standard_D2s_v3"
+  size                            = "Standard_D2als_v6"
   admin_username                  = each.value.username
   admin_password                  = each.value.password
   network_interface_ids           = [azurerm_network_interface.nics[each.key].id]
