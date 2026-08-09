@@ -3,14 +3,6 @@ rgs = {
     name     = "sg"
     location = "westus"
   }
-  rg2 = {
-    name     = "sg1"
-    location = "westus"
-  }
-    rg3 = {
-    name     = "sg2"
-    location = "westus"
-  }
 }
 subnets = {
   subnet1 = {
@@ -52,27 +44,27 @@ pip = {
 
 vms = {
   nic1 = {
-    name                = "nic1"
-    resource_group_name = "sg"
-    location            = "westus"
-    subnet_name = "frontend_subnet"
-    public_ip_name = "sgpip1"
+    name                 = "nic1"
+    resource_group_name  = "sg"
+    location             = "westus"
+    subnet_name          = "frontend_subnet"
+    public_ip_name       = "sgpip1"
     virtual_network_name = "sgvnet"
     virtual_machine_name = "vm1"
-    username = "devopsinsiders"
-    password = "Nokia@123"
+    username             = "devopsinsiders"
+    password             = "Nokia@123"
   }
   nic2 = {
-    name                = "nic2"
-    resource_group_name = "sg"
-    location            = "westus"
-    subnet_name = "backend_subnet"
-    public_ip_name = "sgpip2"
+    name                 = "nic2"
+    resource_group_name  = "sg"
+    location             = "westus"
+    subnet_name          = "backend_subnet"
+    public_ip_name       = "sgpip2"
     virtual_network_name = "sgvnet"
     virtual_network_name = "sgvnet"
     virtual_machine_name = "vm2"
-    username = "devopsinsiders"
-    password = "Nokia@123"
+    username             = "devopsinsiders"
+    password             = "Nokia@123"
   }
 }
 

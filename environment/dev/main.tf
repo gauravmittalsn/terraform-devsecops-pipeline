@@ -21,5 +21,5 @@ module "public_ip" {
 module "network_interface" {
   depends_on = [module.public_ip, module.resource_group, module.subnet]
   source     = "../../child_module/network_interface"
-  vms       = var.vms
+  vms        = var.vms
 }
