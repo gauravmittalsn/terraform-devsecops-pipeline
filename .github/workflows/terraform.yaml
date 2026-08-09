@@ -25,6 +25,7 @@ jobs:
   # FEATURE BRANCH
   # Init -> Fmt -> Validate -> Plan
   # =====================================================
+
   terraform-plan:
 
     name: Terraform Plan - Feature
@@ -35,42 +36,39 @@ jobs:
 
     steps:
 
-      # Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Azure Login
+      # Azure Login - Service Principal + Client Secret
       - name: Azure Login
         uses: azure/login@v2
         with:
           auth-type: SERVICE_PRINCIPAL
-          client-id: ${{ env.AZURE_CLIENT_ID }}
-          client-secret: ${{ env.AZURE_CLIENT_SECRET }}
-          tenant-id: ${{ env.AZURE_TENANT_ID }}
-          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          creds: |
+            {
+              "clientId": "${{ env.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ env.AZURE_CLIENT_SECRET }}",
+              "tenantId": "${{ env.AZURE_TENANT_ID }}",
+              "subscriptionId": "${{ env.AZURE_SUBSCRIPTION_ID }}"
+            }
 
-      # Install Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      # Terraform Init
       - name: Terraform Init
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform init
 
-      # Terraform Format
       - name: Terraform Format
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform fmt -check -recursive
 
-      # Terraform Validate
       - name: Terraform Validate
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform validate
 
-      # Terraform Plan
       - name: Terraform Plan
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform plan
@@ -80,6 +78,7 @@ jobs:
   # MAIN BRANCH
   # Init -> Fmt -> Validate -> Plan -> Apply
   # =====================================================
+
   terraform-apply:
 
     name: Terraform Plan and Apply - Main
@@ -90,47 +89,43 @@ jobs:
 
     steps:
 
-      # Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Azure Login
+      # Azure Login - Service Principal + Client Secret
       - name: Azure Login
         uses: azure/login@v2
         with:
           auth-type: SERVICE_PRINCIPAL
-          client-id: ${{ env.AZURE_CLIENT_ID }}
-          client-secret: ${{ env.AZURE_CLIENT_SECRET }}
-          tenant-id: ${{ env.AZURE_TENANT_ID }}
-          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          creds: |
+            {
+              "clientId": "${{ env.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ env.AZURE_CLIENT_SECRET }}",
+              "tenantId": "${{ env.AZURE_TENANT_ID }}",
+              "subscriptionId": "${{ env.AZURE_SUBSCRIPTION_ID }}"
+            }
 
-      # Install Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      # Terraform Init
       - name: Terraform Init
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform init
 
-      # Terraform Format
       - name: Terraform Format
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform fmt -check -recursive
 
-      # Terraform Validate
       - name: Terraform Validate
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform validate
 
-      # Terraform Plan
       - name: Terraform Plan
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform plan -out=tfplan
 
-      # Terraform Apply
       - name: Terraform Apply
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform apply -auto-approve tfplan
